@@ -1,15 +1,17 @@
 -- ====================================================================================================================
 -- ZKVLC for CP2077 by Kvalyr
 -- ====================================================================================================================
-local version = "0.1.2"
+local version = "0.1.3"
 local modString = "ZKVLC v" .. version
 local ZKVLC = {
+    name = "ZKVLC",
     version = version,
     modString = modString,
     description = modString .. " - Loot & Crafting Overhaul for CP2077 - Version: " .. version,
     descSimple = "Loot & Crafting Overhaul",
     nativeSettingsBasePath = "/ZKVLC",
-    nativeSettingsTabi18nKey = "zkvlc_settings.tab",
+    nativeSettingsTabLabel = "ZKVLC",
+    -- nativeSettingsTabi18nKey = "zkvlc_settings.tab",
     configFileName = "config.json",
     displayName = "ZKVLC - Loot & Crafting Overhaul",
     profiles = {
@@ -25,7 +27,7 @@ ZKVLC.version = version
 ZKVLC.modString = modString
 
 local utils = assert(loadfile("utils/main.lua"))(ZKVLC)
-
+utils.ClearLog() -- Clear the log file for a new startup
 
 -- ====================================================================================================================
 
@@ -83,12 +85,10 @@ local function onInit()
     utils.pcall(SetupUpgrading)
     utils.pcall(SetupSettings)
     utils.Settings.LoadActiveProfile()
-
-    ZKVLC.print("Finished Loading!")
 end
 
 function ZKVLC:New()
-    registerForEvent("onInit", onInit)
+    registerForEvent("onInit", function() utils.ModInit(onInit) end)
 
     return ZKVLC
 end
