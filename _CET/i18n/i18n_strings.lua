@@ -288,9 +288,144 @@ function i18n_strings:Init()
     -- Chinese (PRC)
     -- Translation submitted by Zo7lin @ NexusMods
     local strings_ZHCN = {
-        -- TODO: Using strings_EN as a reference, add translation strings here
-    }
-    AddStringsForLanguage("zh-cn", strings_ZHCN)
+        ["zkvlc_settings.tab"] = "自定义成本",
+         ["zkvlc_settings.category.general"] = "总体",
+         ["zkvlc_settings.General.ProfileSwitcher.label"] = "开关配置文件",
+         ["zkvlc_settings.General.ProfileSwitcher.tooltip"] = "选择用户配置，Kvalyr的自定义数值或游戏原版默认值\n注意:设置更改仅在“User”配置文件处于激活状态时保存",
+
+         -- Crafting Settings
+         ["zkvlc_settings.category.crafting"] = "制作资源倍数-组件",
+         ["zkvlc_settings.category.crafting_equipment"] = "制作资源倍数-物品稀有度",
+
+         ["zkvlc_settings.Crafting.Mult_All.label"] = "制作材料花费-总体",
+         ["zkvlc_settings.Crafting.Mult_All.tooltip"] = "制造所需材料的倍数，下面的滑块进一步乘以此项",
+
+         ["zkvlc_settings.Crafting.Mult_Common_components.label"] = "材料成本-普通组件",
+         ["zkvlc_settings.Crafting.Mult_Common_components.tooltip"] = "所需的普通组件的倍数",
+
+         ["zkvlc_settings.Crafting.Mult_Uncommon_components.label"] = "材料成本-精良组件",
+         ["zkvlc_settings.Crafting.Mult_Uncommon_components.tooltip"] = "所需的精良组件的倍数",
+
+         ["zkvlc_settings.Crafting.Mult_Rare_components.label"] = "材料成本-稀有组件",
+         ["zkvlc_settings.Crafting.Mult_Rare_components.tooltip"] = "所需的稀有组件的倍数",
+
+         ["zkvlc_settings.Crafting.Mult_Epic_components.label"] = "材料成本-史诗组件",
+         ["zkvlc_settings.Crafting.Mult_Epic_components.tooltip"] = "所需的史诗组件的倍数",
+
+         ["zkvlc_settings.Crafting.Mult_Legendary_components.label"] = "材料成本-传说组件",
+         ["zkvlc_settings.Crafting.Mult_Legendary_components.tooltip"] = "所需的传说组件的倍数",
+
+         -- Crafting - Equipment
+         ["zkvlc_settings.Crafting.Mult_Common.label"] = "材料成本-普通装备",
+         ["zkvlc_settings.Crafting.Mult_Common.tooltip"] = "所需的普通制作材料倍数",
+
+         ["zkvlc_settings.Crafting.Mult_Uncommon.label"] = "材料成本-精良装备",
+         ["zkvlc_settings.Crafting.Mult_Uncommon.tooltip"] = "所需的精良制作材料倍数",
+
+         ["zkvlc_settings.Crafting.Mult_Rare.label"] = "材料成本-稀有装备",
+         ["zkvlc_settings.Crafting.Mult_Rare.tooltip"] = "所需的稀有制作材料倍数",
+
+         ["zkvlc_settings.Crafting.Mult_Epic.label"] = "材料成本-史诗装备",
+         ["zkvlc_settings.Crafting.Mult_Epic.tooltip"] = "所需的史诗制作材料倍数",
+
+         ["zkvlc_settings.Crafting.Mult_Legendary.label"] = "材料成本-传说装备",
+         ["zkvlc_settings.Crafting.Mult_Legendary.tooltip"] = "所需的传说制作材料倍数",
+
+         -- Upgrading Settings
+         ["zkvlc_settings.category.upgrading"] = "升级资源倍数-组件",
+
+         ["zkvlc_settings.Upgrading.Mult_Common_components.label"] = "材料成本-普通组件",
+         ["zkvlc_settings.Upgrading.Mult_Common_components.tooltip"] = "所需普通升级材料的倍数",
+
+         ["zkvlc_settings.Upgrading.Mult_Uncommon_components.label"] = "材料成本-精良组件",
+         ["zkvlc_settings.Upgrading.Mult_Uncommon_components.tooltip"] = "所需精良升级材料的倍数",
+
+         ["zkvlc_settings.Upgrading.Mult_Rare_components.label"] = "材料成本-稀有组件",
+         ["zkvlc_settings.Upgrading.Mult_Rare_components.tooltip"] = "所需稀有升级材料的倍数",
+
+         ["zkvlc_settings.Upgrading.Mult_Epic_components.label"] = "材料成本-史诗组件",
+         ["zkvlc_settings.Upgrading.Mult_Epic_components.tooltip"] = "所需史诗升级材料的倍数",
+
+         ["zkvlc_settings.Upgrading.Mult_Legendary_components.label"] = "材料成本-传说组件",
+         ["zkvlc_settings.Upgrading.Mult_Legendary_components.tooltip"] = "所需传说升级材料的倍数",
+
+         -- Upgrading - Equipment
+         ["zkvlc_settings.category.upgrading_equipment"] = "升级资源倍数-物品稀有度",
+
+         ["zkvlc_settings.Upgrading.Mult_All.label"] = "升级材料成本-总体",
+         ["zkvlc_settings.Upgrading.Mult_All.tooltip"] = "升级所需材料的倍数，下面的滑块进一步增加此项",
+
+         ["zkvlc_settings.Upgrading.Mult_Common.label"] = "材料成本-普通装备",
+         ["zkvlc_settings.Upgrading.Mult_Common.tooltip"] = "所需普通升级材料的倍数",
+
+         ["zkvlc_settings.Upgrading.Mult_Uncommon.label"] = "材料成本-精良装备",
+         ["zkvlc_settings.Upgrading.Mult_Uncommon.tooltip"] = "所需精良升级材料的倍数",
+
+         ["zkvlc_settings.Upgrading.Mult_Rare.label"] = "材料成本-稀有装备",
+         ["zkvlc_settings.Upgrading.Mult_Rare.tooltip"] = "所需稀有升级材料的倍数",
+
+         ["zkvlc_settings.Upgrading.Mult_Epic.label"] = "材料成本-史诗装备",
+         ["zkvlc_settings.Upgrading.Mult_Epic.tooltip"] = "所需史诗升级材料的倍数",
+
+         ["zkvlc_settings.Upgrading.Mult_Legendary.label"] = "材料成本-传说装备",
+         ["zkvlc_settings.Upgrading.Mult_Legendary.tooltip"] = "所需传说升级材料的倍数",
+
+         -- Upgrading Caps
+         ["zkvlc_settings.category.upgrading_caps"] = "升级成本上限",
+         ["zkvlc_settings.category.upgrading_caps_iconic"] = "升级成本上限(不朽武器)",
+
+         ["zkvlc_settings.Upgrading.Cap_Total.label"] = "升级成本上限——所有材料",
+         ["zkvlc_settings.Upgrading.Cap_Total.tooltip"] = "升级物品的成本通常因随着每次升级而增加；此设置控制升级的成本何时停止增加（如：如设为5，则成本在5次升级后保持不变）",
+
+         ["zkvlc_settings.Upgrading.Cap_Common.label"] = "升级成本上限——普通材料",
+         ["zkvlc_settings.Upgrading.Cap_Common.tooltip"] = "升级物品的成本通常因随着每次升级而增加；此设置控制升级的成本何时停止增加（如：如设为5，则成本在5次升级后保持不变）",
+
+         ["zkvlc_settings.Upgrading.Cap_Uncommon.label"] = "升级成本上限——精良材料",
+         ["zkvlc_settings.Upgrading.Cap_Uncommon.tooltip"] = "升级物品的成本通常因随着每次升级而增加；此设置控制升级的成本何时停止增加（如：如设为5，则成本在5次升级后保持不变）",
+
+         ["zkvlc_settings.Upgrading.Cap_Rare.label"] = "升级成本上限——稀有材料",
+         ["zkvlc_settings.Upgrading.Cap_Rare.tooltip"] = "升级物品的成本通常因随着每次升级而增加；此设置控制升级的成本何时停止增加（如：如设为5，则成本在5次升级后保持不变）",
+
+         ["zkvlc_settings.Upgrading.Cap_Epic.label"] = "升级成本上限——史诗材料",
+         ["zkvlc_settings.Upgrading.Cap_Epic.tooltip"] = "升级物品的成本通常因随着每次升级而增加；此设置控制升级的成本何时停止增加（如：如设为5，则成本在5次升级后保持不变）",
+
+         ["zkvlc_settings.Upgrading.Cap_Legendary.label"] = "升级成本上限——传说材料",
+         ["zkvlc_settings.Upgrading.Cap_Legendary.tooltip"] = "升级物品的成本通常因随着每次升级而增加；此设置控制升级的成本何时停止增加（如：如设为5，则成本在5次升级后保持不变）",
+
+         -- Capacity Settings
+         ["zkvlc_settings.category.capacity_limits"] = "容量限制",
+         ["zkvlc_settings.category.capacity_limits_grenades"] = "容量限制-手雷",
+         ["zkvlc_settings.category.capacity_limits_healing"] = "容量限制-医疗品",
+         ["zkvlc_settings.category.capacity_limits_ammo"] = "容量限制-弹药",
+
+         ["zkvlc_settings.Capacity.Limit.label"] = "物品容量限制",
+         ["zkvlc_settings.Capacity.Limit.tooltip"] = "控制物品容量限制的主开关；如启用，则多余的物品将被丢弃",
+
+         ["zkvlc_settings.Capacity.ScrapExcess.label"] = "分解多余物品",
+         ["zkvlc_settings.Capacity.ScrapExcess.tooltip"] = "如你有“变废为宝”技能，则分解多余的物品（而不是丢弃它们）",
+
+         ["zkvlc_settings.Capacity.Limit_Grenades.label"] = "手雷携带限制(所有类型)",
+         ["zkvlc_settings.Capacity.Limit_Grenades.tooltip"] = "你能携带的每种类型和品质的手雷最大数量；设为-1则为无限",
+
+         ["zkvlc_settings.Capacity.Limit_Injectors.label"] = "注射器携带限制(所有品质)",
+         ["zkvlc_settings.Capacity.Limit_Injectors.tooltip"] = "每个品质的注射器所能携带的最大数量；设为-1则为无限",
+
+         ["zkvlc_settings.Capacity.Limit_Inhalers.label"] = "吸入器携带限制(所有品质)",
+         ["zkvlc_settings.Capacity.Limit_Inhalers.tooltip"] = "每个品质的吸入器所能携带的最大数量；设为-1则为无限",
+
+         ["zkvlc_settings.Capacity.Limit_Ammo_Handgun.label"] = "手枪弹药限制",
+         ["zkvlc_settings.Capacity.Limit_Ammo_Handgun.tooltip"] = "手枪弹药所能携带的最大数量；设为-1则为无限",
+
+         ["zkvlc_settings.Capacity.Limit_Ammo_Rifle.label"] = "步枪弹药限制",
+         ["zkvlc_settings.Capacity.Limit_Ammo_Rifle.tooltip"] = "步枪弹药所能携带的最大数量；设为-1则为无限",
+
+         ["zkvlc_settings.Capacity.Limit_Ammo_Shotgun.label"] = "霰弹枪弹药限制",
+         ["zkvlc_settings.Capacity.Limit_Ammo_Shotgun.tooltip"] = "霰弹枪弹药所能携带的最大数量；设为-1则为无限",
+
+         ["zkvlc_settings.Capacity.Limit_Ammo_Sniper.label"] = "狙击步枪弹药限制",
+         ["zkvlc_settings.Capacity.Limit_Ammo_Sniper.tooltip"] = "狙击步枪弹药所能携带的最大数量；设为-1则为无限",
+     }
+     AddStringsForLanguage("zh-cn", strings_ZHCN)
 
     -- ====================================================================================================================
 

@@ -79,40 +79,6 @@ constants.grenadePriority = {
     [8] = "Items.GrenadeFlash",
 }
 
-local baseKey = "ZKVLC.Config"
-constants.tweakDB_configKeys = {
-    base = baseKey,
-    CapacityLimiter = "ZKVLC.Config:CapacityLimiter",
-    CapacityLimiter_limit = "ZKVLC.Config:CapacityLimiter.limit",
-    CapacityLimiter_scrapExcess = "ZKVLC.Config:CapacityLimiter.scrapExcess",
-    CapacityLimiter_limit_grenades = "ZKVLC.Config:CapacityLimiter.limit_grenades",
-    CapacityLimiter_limit_injectors = "ZKVLC.Config:CapacityLimiter.limit_injectors",
-    CapacityLimiter_limit_inhalers = "ZKVLC.Config:CapacityLimiter.limit_inhalers",
-
-    CapacityLimiter_limit_ammo_handgun = "ZKVLC.Config:CapacityLimiter.limit_ammo_handgun",
-    CapacityLimiter_limit_ammo_rifle = "ZKVLC.Config:CapacityLimiter.limit_ammo_rifle",
-    CapacityLimiter_limit_ammo_shotgun = "ZKVLC.Config:CapacityLimiter.limit_ammo_shotgun",
-    CapacityLimiter_limit_ammo_sniper = "ZKVLC.Config:CapacityLimiter.limit_ammo_sniper",
-}
-
-constants.tweakDB_configDefaults = {
-    CapacityLimiter = {
-        limit = true,
-        scrapExcess = true,
-
-        -- Consumables
-        limit_grenades = 2,
-        limit_injectors = 3,
-        limit_inhalers = 3,
-
-        -- Ammo
-        limit_ammo_handgun = 60,
-        limit_ammo_rifle = 120,
-        limit_ammo_shotgun = 32,
-        limit_ammo_sniper = 32,
-    },
-}
-
 -- ====================================================================================================================
 -- Upgrading
 

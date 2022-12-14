@@ -70,7 +70,7 @@ private func ZKVLC_ShouldBeLimitedConsumable(data: wref<gameItemData>, quality: 
     {
 
 
-        ZKVLog("ZKVLC_ShouldBeScrappedConsumable() - Item is grenade: " + TDBID.ToStringDEBUG(tdbid));
+        // ZKVLog("ZKVLC_ShouldBeScrappedConsumable() - Item is grenade: " + TDBID.ToStringDEBUG(tdbid));
         switch quality
         {
             // case gamedataQuality.Rare: return this.zkvlc_scrapperGrenade.rare;
@@ -84,7 +84,7 @@ private func ZKVLC_ShouldBeLimitedConsumable(data: wref<gameItemData>, quality: 
 
     if Equals(type, gamedataItemType.Con_Injector)
     {
-        ZKVLog("ZKVLC_ShouldBeScrappedConsumable() - Item is injector: " + TDBID.ToStringDEBUG(tdbid));
+        // ZKVLog("ZKVLC_ShouldBeScrappedConsumable() - Item is injector: " + TDBID.ToStringDEBUG(tdbid));
         switch quality
         {
             // case gamedataQuality.Rare: return this.zkvlc_scrapperBounceBack.rare;
@@ -98,7 +98,7 @@ private func ZKVLC_ShouldBeLimitedConsumable(data: wref<gameItemData>, quality: 
 
     if Equals(type, gamedataItemType.Con_Inhaler)
     {
-        ZKVLog("ZKVLC_ShouldBeScrappedConsumable() - Item is inhaler: " + TDBID.ToStringDEBUG(tdbid));
+        // ZKVLog("ZKVLC_ShouldBeScrappedConsumable() - Item is inhaler: " + TDBID.ToStringDEBUG(tdbid));
         switch quality {
             // case gamedataQuality.Epic: return this.zkvlc_scrapperMaxDoc.epic;
             // case gamedataQuality.Rare: return this.zkvlc_scrapperMaxDoc.rare;
@@ -171,7 +171,7 @@ protected cb func OnItemAddedToInventory(evt: ref<ItemAddedEvent>) -> Bool {
     // }
     if itemData.HasTag(n"Quest")
     {
-        ZKVLog("OnItemAddedToInventory() - Item has quest tag");
+        // ZKVLog("OnItemAddedToInventory() - Item has quest tag");
         return true;
     };
 
@@ -187,13 +187,13 @@ protected cb func OnItemAddedToInventory(evt: ref<ItemAddedEvent>) -> Bool {
     }
     excess = quantityHeld - itemLimit;
 
-    ZKVLog("OnItemAddedToInventory(): " + TDBID.ToStringDEBUG(tweakDbId) + ", quantityHeld: " + quantityHeld + ", itemLimit: " + itemLimit + ", excess: " + excess);
+    // ZKVLog("OnItemAddedToInventory(): " + TDBID.ToStringDEBUG(tweakDbId) + ", quantityHeld: " + quantityHeld + ", itemLimit: " + itemLimit + ", excess: " + excess);
 
     if excess > 0
     {
         excess = Abs(excess);
 
-        ZKVLog("OnItemAddedToInventory() - Quantity held exceeds limit:" + TDBID.ToStringDEBUG(tweakDbId) + ", quantityHeld: " + quantityHeld + ", itemLimit: " + itemLimit);
+        // ZKVLog("OnItemAddedToInventory() - Quantity held exceeds limit:" + TDBID.ToStringDEBUG(tweakDbId) + ", quantityHeld: " + quantityHeld + ", itemLimit: " + itemLimit);
 
         if shouldScrap && this.CanAutomaticallyDisassembleJunk()
         {
@@ -222,7 +222,6 @@ public final const func GetMaxCraftingAmount(itemData: wref<gameItemData>) -> In
     let quality: gamedataQuality = RPGManager.GetItemDataQuality(itemData);
     let itemLimit: Int32 = ZKVLC_GetLimitForItem(itemData, quality);
 
-    // itemTweakDBID = ItemID.GetTDBID(itemData.GetID());
     // ZKVLog("GetMaxCraftingAmount(): " + TDBID.ToStringDEBUG(ItemID.GetTDBID(itemData.GetID())) + ", currentQuantity: " + currentQuantity + ", itemLimit: " + itemLimit);
 
     // If we don't have a limit for this item, just do nothing and return the wrapped method's result
@@ -257,9 +256,17 @@ public final const func CanItemBeCrafted(itemData: wref<gameItemData>) -> Bool {
         let quality: gamedataQuality = RPGManager.GetItemDataQuality(itemData);
         let itemLimit: Int32 = ZKVLC_GetLimitForItem(itemData, quality);
 
+        // ZKVLog("CanItemBeCrafted() 1: " + TDBID.ToStringDEBUG(ItemID.GetTDBID(itemData.GetID())) + ", itemLimit: " + itemLimit);
+
+        // If we don't have a limit for this item, just do nothing and return the wrapped method's result
+        if itemLimit < 0
+        {
+            return result;
+        }
+
         currentQuantity = transactionSystem.GetItemQuantity(this.m_playerCraftBook.GetOwner(), itemData.GetID());
         // itemTweakDBID = ItemID.GetTDBID(itemData.GetID());
-        // ZKVLog("CanItemBeCrafted(): " + TDBID.ToStringDEBUG(ItemID.GetTDBID(itemData.GetID())) + ", currentQuantity: " + currentQuantity + ", itemLimit: " + itemLimit);
+        // ZKVLog("CanItemBeCrafted() 2: " + TDBID.ToStringDEBUG(ItemID.GetTDBID(itemData.GetID())) + ", currentQuantity: " + currentQuantity + ", itemLimit: " + itemLimit);
 
         if currentQuantity >= itemLimit
         {
@@ -270,19 +277,19 @@ public final const func CanItemBeCrafted(itemData: wref<gameItemData>) -> Bool {
 }
 
 
-@wrapMethod(FullscreenVendorGameController)
-private final func GetMaxQuantity(item: wref<UIInventoryItem>, opt isPlayerItem: Bool) -> Int32 {
-    let result: Int32 = wrappedMethod(item, isPlayerItem);
+// @wrapMethod(FullscreenVendorGameController)
+// private final func GetMaxQuantity(item: wref<UIInventoryItem>, opt isPlayerItem: Bool) -> Int32 {
+//     let result: Int32 = wrappedMethod(item, isPlayerItem);
 
-    let tags: array<CName>;
-    let vendorQuantity: Int32 = item.GetQuantity();
-    tags = item.GetItemRecord().Tags();
+//     let tags: array<CName>;
+//     let vendorQuantity: Int32 = item.GetQuantity();
+//     tags = item.GetItemRecord().Tags();
 
-    // TODO: This is probably wrong
-    if !(ArrayContains(tags, n"Ammo") || ArrayContains(tags, n"Injector") || ArrayContains(tags, n"Inhaler") || ArrayContains(tags, n"Grenade"))
-    {
-        return vendorQuantity;
-    };
+//     // TODO: This is probably wrong
+//     if !(ArrayContains(tags, n"Ammo") || ArrayContains(tags, n"Injector") || ArrayContains(tags, n"Inhaler") || ArrayContains(tags, n"Grenade"))
+//     {
+//         return vendorQuantity;
+//     };
 
-    return result;
-}
+//     return result;
+// }

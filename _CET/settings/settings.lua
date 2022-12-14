@@ -22,11 +22,7 @@ function ZKVLC:SaveSettings()
     return utils.Settings.Save()
 end
 
--- GetMod("ZKV_Takedowns").Settings:Debug()
-function ZKVLC_Settings:Init()
-    utils.NativeSettings:Init()
-
-    ZKVLC:LoadSettings()
+function ZKVLC_Settings.SetupNativeSettingsUIWidgets()
 
     local modPathPrefix = "zkvlc_"
     local subcategories = {
@@ -88,7 +84,7 @@ function ZKVLC_Settings:Init()
         "CapacityLimiter_ScrapExcess",
         "switch",
         { default = false },
-        "ZKVLC.Config:CapacityLimiter.limit"
+        "ZKVLC.Config:CapacityLimiter.scrapExcess"
     )
 
     -- Grenades
@@ -287,6 +283,14 @@ function ZKVLC_Settings:Init()
             "ZKVLC.Config:Upgrading.Cap:" .. rarity .. "_Iconic"
         )
     end
+end
+
+-- GetMod("ZKV_Takedowns").Settings:Debug()
+function ZKVLC_Settings:Init()
+    utils.NativeSettings:Init()
+
+    ZKVLC:LoadSettings()
+    utils.pcall(ZKVLC_Settings.SetupNativeSettingsUIWidgets)
 end
 
 -- ====================================================================================================================
