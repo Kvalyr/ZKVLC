@@ -2,39 +2,81 @@ public static func ZKVLog(const str: script_ref<String>) -> Void {
   LogChannel(n"DEBUG", "ZKVLC: " + str);
 }
 
-// @addMethod(PlayerPuppet)
-// public func ZKVLC_HasExcludedQuestActive() -> Bool {
-//     let journalManager: wref<JournalManager> = GameInstance.GetJournalManager(this.GetGame());
-//     let trackedObjective: wref<JournalQuestObjective> = journalManager.GetTrackedEntry() as JournalQuestObjective;
-//     return
-//         // Starting tutorial
-//         Equals(trackedObjective.GetId(), "01a_pick_weapon") ||
-//         Equals(trackedObjective.GetId(), "01c_pick_up_reanimator") ||
-//         Equals(trackedObjective.GetId(), "03_pick_up_katana") ||
-//     false;
-// }
-
-// Game.AddToInventory("Items.GrenadeFragRegular", 1)
 
 public final func ZKVLC_TweakDB_GetShouldLimit() -> Bool
 {
-    return TweakDBInterface.GetBool(TDBID.Create(s"ZKVLC.Config:CapacityLimiter.limit"), false);
+    let should: Bool = TweakDBInterface.GetBool(TDBID.Create(s"ZKVLC.Config:CapacityLimiter.limit"), false);
+    // ZKVLog("ZKVLC_TweakDB_GetShouldLimit():" + should);
+    return should;
 }
+
+
 public final func ZKVLC_TweakDB_GetShouldScrap() -> Bool
 {
-    return TweakDBInterface.GetBool(TDBID.Create(s"ZKVLC.Config:CapacityLimiter.scrapExcess"), false);
+    let should: Bool = ZKVLC_TweakDB_GetShouldLimit() && TweakDBInterface.GetBool(TDBID.Create(s"ZKVLC.Config:CapacityLimiter.scrapExcess"), false);
+    // ZKVLog("ZKVLC_TweakDB_GetShouldScrap():" + should);
+    return should;
 }
+
 
 public final func ZKVLC_TweakDB_GetLimitForItemType(itemType: String) -> Int32
 {
-    return TweakDBInterface.GetInt(TDBID.Create(s"ZKVLC.Config:CapacityLimiter.limit_" + itemType), -1);
+    let limit: Int32 = -1;
+    limit = TweakDBInterface.GetInt(TDBID.Create(s"ZKVLC.Config:CapacityLimiter.limit_" + itemType), -1);
+    // ZKVLog("ZKVLC_TweakDB_GetLimitForItemType(): itemType: " + itemType + ", limit: " + limit);
+    return limit;
 }
 
 
-
-public static final func ZKVLC_GetLimitForItem(data: wref<gameItemData>, quality: gamedataQuality) -> Int32
-{
+public static func ZKVLC_ShouldBeLimitedConsumable(data: wref<gameItemData>, quality: gamedataQuality) -> Bool {
     let type: gamedataItemType = data.GetItemType();
+    let limitStr: String;
+    let limit: Int32;
+
+    if Equals(type, gamedataItemType.Gad_Grenade)
+    {
+        // ZKVLog("ZKVLC_ShouldBeScrappedConsumable() - Item is grenade: " + TDBID.ToStringDEBUG(tdbid));
+        switch quality
+        {
+            case gamedataQuality.Rare: return ZKVLC_TweakDB_GetShouldLimit();
+            case gamedataQuality.Uncommon: return ZKVLC_TweakDB_GetShouldLimit();
+            case gamedataQuality.Common: return ZKVLC_TweakDB_GetShouldLimit();
+        };
+    };
+
+    if Equals(type, gamedataItemType.Con_Injector)
+    {
+        // ZKVLog("ZKVLC_ShouldBeScrappedConsumable() - Item is injector: " + TDBID.ToStringDEBUG(tdbid));
+        switch quality
+        {
+            case gamedataQuality.Rare: return ZKVLC_TweakDB_GetShouldLimit();
+            case gamedataQuality.Uncommon: return ZKVLC_TweakDB_GetShouldLimit();
+            case gamedataQuality.Common: return ZKVLC_TweakDB_GetShouldLimit();
+        };
+    };
+
+    if Equals(type, gamedataItemType.Con_Inhaler)
+    {
+        // ZKVLog("ZKVLC_ShouldBeScrappedConsumable() - Item is inhaler: " + TDBID.ToStringDEBUG(tdbid));
+        switch quality {
+            case gamedataQuality.Epic: return ZKVLC_TweakDB_GetShouldLimit();
+            case gamedataQuality.Rare: return ZKVLC_TweakDB_GetShouldLimit();
+            case gamedataQuality.Uncommon: return ZKVLC_TweakDB_GetShouldLimit();
+        };
+    };
+
+    return false;
+}
+
+
+public static final func ZKVLC_GetLimitForItem(itemData: wref<gameItemData>, quality: gamedataQuality) -> Int32
+{
+    if !ZKVLC_ShouldBeLimitedConsumable(itemData, quality)
+    {
+        return -1;
+    }
+
+    let type: gamedataItemType = itemData.GetItemType();
     let limitStr: String;
 
     // TODO: quality
@@ -54,77 +96,6 @@ public static final func ZKVLC_GetLimitForItem(data: wref<gameItemData>, quality
     return -1;
 }
 
-@addMethod(PlayerPuppet)
-private func ZKVLC_ShouldBeLimitedConsumable(data: wref<gameItemData>, quality: gamedataQuality) -> Bool {
-    let type: gamedataItemType = data.GetItemType();
-    let limitStr: String;
-    let limit: Int32;
-
-    // Don't scrap neuroblockers
-    let tdbid: TweakDBID = ItemID.GetTDBID(data.GetID());
-    if Equals(tdbid, t"Items.ripperdoc_med") || Equals(tdbid, t"Items.ripperdoc_med_uncommon") || Equals(tdbid, t"Items.ripperdoc_med_common") {
-        return false;
-    };
-
-    if Equals(type, gamedataItemType.Gad_Grenade)
-    {
-
-
-        // ZKVLog("ZKVLC_ShouldBeScrappedConsumable() - Item is grenade: " + TDBID.ToStringDEBUG(tdbid));
-        switch quality
-        {
-            // case gamedataQuality.Rare: return this.zkvlc_scrapperGrenade.rare;
-            // case gamedataQuality.Uncommon: return this.zkvlc_scrapperGrenade.uncommon;
-            // case gamedataQuality.Common: return this.zkvlc_scrapperGrenade.common;
-            case gamedataQuality.Rare: return true;
-            case gamedataQuality.Uncommon: return true;
-            case gamedataQuality.Common: return true;
-        };
-    };
-
-    if Equals(type, gamedataItemType.Con_Injector)
-    {
-        // ZKVLog("ZKVLC_ShouldBeScrappedConsumable() - Item is injector: " + TDBID.ToStringDEBUG(tdbid));
-        switch quality
-        {
-            // case gamedataQuality.Rare: return this.zkvlc_scrapperBounceBack.rare;
-            // case gamedataQuality.Uncommon: return this.zkvlc_scrapperBounceBack.uncommon;
-            // case gamedataQuality.Common: return this.zkvlc_scrapperBounceBack.common;
-            case gamedataQuality.Rare: return ZKVLC_TweakDB_GetShouldLimit();
-            case gamedataQuality.Uncommon: return ZKVLC_TweakDB_GetShouldLimit();
-            case gamedataQuality.Common: return ZKVLC_TweakDB_GetShouldLimit();
-        };
-    };
-
-    if Equals(type, gamedataItemType.Con_Inhaler)
-    {
-        // ZKVLog("ZKVLC_ShouldBeScrappedConsumable() - Item is inhaler: " + TDBID.ToStringDEBUG(tdbid));
-        switch quality {
-            // case gamedataQuality.Epic: return this.zkvlc_scrapperMaxDoc.epic;
-            // case gamedataQuality.Rare: return this.zkvlc_scrapperMaxDoc.rare;
-            // case gamedataQuality.Uncommon: return this.zkvlc_scrapperMaxDoc.uncommon;
-            case gamedataQuality.Epic: return ZKVLC_TweakDB_GetShouldLimit();
-            case gamedataQuality.Rare: return ZKVLC_TweakDB_GetShouldLimit();
-            case gamedataQuality.Uncommon: return ZKVLC_TweakDB_GetShouldLimit();
-        };
-    };
-
-    return false;
-}
-
-// // Keep last bought item id
-// @addField(PlayerPuppet)
-// public let boughtItem: ItemID;
-
-// // Save last bought item id
-// @wrapMethod(Vendor)
-// private final func PerformItemTransfer(buyer: wref<GameObject>, seller: wref<GameObject>, itemTransaction: SItemTransaction) -> Bool {
-//   let player: ref<PlayerPuppet> = buyer as PlayerPuppet;
-//   if IsDefined(player) {
-//     player.boughtItem = itemTransaction.itemStack.itemID;
-//   };
-//   return wrappedMethod(buyer, seller, itemTransaction);
-// }
 
 
 
@@ -143,6 +114,7 @@ public final func ZKVLC_DisassembleItems(executor: wref<GameObject>, itemID: Ite
     };
 }
 
+
 public final func ZKVLC_DropItems(executor: wref<GameObject>, itemID: ItemID, quantity: Int32) -> Void {
     let i: Int32 = 0;
     while i < quantity{
@@ -155,45 +127,43 @@ public final func ZKVLC_DropItems(executor: wref<GameObject>, itemID: ItemID, qu
 // Runs when item added to inventory
 @wrapMethod(PlayerPuppet)
 protected cb func OnItemAddedToInventory(evt: ref<ItemAddedEvent>) -> Bool {
-    wrappedMethod(evt);
-
+    let result: Bool = wrappedMethod(evt);
+    if !ZKVLC_TweakDB_GetShouldLimit()
+    {
+        return result;
+    }
     let itemData: wref<gameItemData> = evt.itemData;
     let tweakDbId: TweakDBID = ItemID.GetTDBID(itemData.GetID());
     let quality: gamedataQuality = RPGManager.GetItemDataQuality(itemData);
     let quantityHeld: Int32 = GameInstance.GetTransactionSystem(this.GetGame()).GetItemQuantity(this, evt.itemID);
-    let itemLimit: Int32 = ZKVLC_GetLimitForItem(itemData, quality);
     let excess: Int32;
+    let itemLimit: Int32 = ZKVLC_GetLimitForItem(itemData, quality);
     let shouldScrap: Bool = ZKVLC_TweakDB_GetShouldScrap();
 
-    // if this.ZKVLC_HasExcludedQuestActive()
-    // {
-    //     return;
-    // }
-    if itemData.HasTag(n"Quest")
+     if itemData.HasTag(n"Quest")
     {
         // ZKVLog("OnItemAddedToInventory() - Item has quest tag");
-        return true;
+        return result;
     };
 
-    if !this.ZKVLC_ShouldBeLimitedConsumable(itemData, quality)
+    if !ZKVLC_ShouldBeLimitedConsumable(itemData, quality)
     {
-        return true;
+        return result;
     }
 
-    // itemLimit = ZKVLC_GetLimitForItem(itemData, quality);
     if itemLimit < 0
     {
-        return true;
+        return result;
     }
     excess = quantityHeld - itemLimit;
 
-    // ZKVLog("OnItemAddedToInventory(): " + TDBID.ToStringDEBUG(tweakDbId) + ", quantityHeld: " + quantityHeld + ", itemLimit: " + itemLimit + ", excess: " + excess);
+    ZKVLog("OnItemAddedToInventory(): " + TDBID.ToStringDEBUG(tweakDbId) + ", quantityHeld: " + quantityHeld + ", itemLimit: " + itemLimit + ", excess: " + excess);
 
     if excess > 0
     {
         excess = Abs(excess);
 
-        // ZKVLog("OnItemAddedToInventory() - Quantity held exceeds limit:" + TDBID.ToStringDEBUG(tweakDbId) + ", quantityHeld: " + quantityHeld + ", itemLimit: " + itemLimit);
+        ZKVLog("OnItemAddedToInventory() - Quantity held exceeds limit:" + TDBID.ToStringDEBUG(tweakDbId) + ", quantityHeld: " + quantityHeld + ", itemLimit: " + itemLimit);
 
         if shouldScrap && this.CanAutomaticallyDisassembleJunk()
         {
@@ -206,23 +176,27 @@ protected cb func OnItemAddedToInventory(evt: ref<ItemAddedEvent>) -> Bool {
             ZKVLC_DropItems(this, evt.itemID, excess);
         };
     }
+    return result;
 }
 
 
 @wrapMethod(CraftingSystem)
 public final const func GetMaxCraftingAmount(itemData: wref<gameItemData>) -> Int32 {
+    let result: Int32 = wrappedMethod(itemData);
     let currentQuantity: Int32;
-    // let itemTweakDBID: TweakDBID;
     let consumableCap: Int32;
     let tags: array<CName>;
     let transactionSystem: ref<TransactionSystem> = GameInstance.GetTransactionSystem(this.GetGameInstance());
 
-    let result: Int32 = wrappedMethod(itemData);
+    if (result < 1)
+    {
+        return result;
+    }
 
     let quality: gamedataQuality = RPGManager.GetItemDataQuality(itemData);
     let itemLimit: Int32 = ZKVLC_GetLimitForItem(itemData, quality);
 
-    // ZKVLog("GetMaxCraftingAmount(): " + TDBID.ToStringDEBUG(ItemID.GetTDBID(itemData.GetID())) + ", currentQuantity: " + currentQuantity + ", itemLimit: " + itemLimit);
+    ZKVLog("GetMaxCraftingAmount(): " + TDBID.ToStringDEBUG(ItemID.GetTDBID(itemData.GetID())) + ", currentQuantity: " + currentQuantity + ", itemLimit: " + itemLimit);
 
     // If we don't have a limit for this item, just do nothing and return the wrapped method's result
     if itemLimit < 0
@@ -238,7 +212,6 @@ public final const func GetMaxCraftingAmount(itemData: wref<gameItemData>) -> In
     }
 
     return itemLimit - currentQuantity;
-
 }
 
 
@@ -248,15 +221,13 @@ public final const func CanItemBeCrafted(itemData: wref<gameItemData>) -> Bool {
     if result
     {
         let currentQuantity: Int32;
-        // let itemRecord: ref<Item_Record>;
-        // let itemTweakDBID: TweakDBID;
         let consumableCap: Int32;
         let tags: array<CName>;
         let transactionSystem: ref<TransactionSystem> = GameInstance.GetTransactionSystem(this.GetGameInstance());
         let quality: gamedataQuality = RPGManager.GetItemDataQuality(itemData);
         let itemLimit: Int32 = ZKVLC_GetLimitForItem(itemData, quality);
 
-        // ZKVLog("CanItemBeCrafted() 1: " + TDBID.ToStringDEBUG(ItemID.GetTDBID(itemData.GetID())) + ", itemLimit: " + itemLimit);
+        ZKVLog("CanItemBeCrafted() 1: " + TDBID.ToStringDEBUG(ItemID.GetTDBID(itemData.GetID())) + ", itemLimit: " + itemLimit);
 
         // If we don't have a limit for this item, just do nothing and return the wrapped method's result
         if itemLimit < 0
@@ -265,7 +236,7 @@ public final const func CanItemBeCrafted(itemData: wref<gameItemData>) -> Bool {
         }
 
         currentQuantity = transactionSystem.GetItemQuantity(this.m_playerCraftBook.GetOwner(), itemData.GetID());
-        // itemTweakDBID = ItemID.GetTDBID(itemData.GetID());
+
         // ZKVLog("CanItemBeCrafted() 2: " + TDBID.ToStringDEBUG(ItemID.GetTDBID(itemData.GetID())) + ", currentQuantity: " + currentQuantity + ", itemLimit: " + itemLimit);
 
         if currentQuantity >= itemLimit
@@ -275,6 +246,43 @@ public final const func CanItemBeCrafted(itemData: wref<gameItemData>) -> Bool {
     };
     return result;
 }
+
+
+// @replaceMethod(CraftingLogicController)
+// protected cb func OnHoldFinished(evt: ref<ProgressBarFinishedProccess>) -> Bool {
+//     // let result: Bool = wrappedMethod(itemData);
+//     let quantity: Int32;
+//     ZKVLog("CraftingLogicController.OnHoldFinished()");
+//     if !this.m_isPanelOpen
+//     {
+//         ZKVLog("CraftingLogicController.OnHoldFinished(): !this.m_isPanelOpen");
+//         return false;
+//     };
+//     if this.m_selectedRecipe.id.TagsContains(n"Grenade") || this.m_selectedRecipe.id.TagsContains(n"Consumable") || this.m_selectedRecipe.id.TagsContains(n"Ammo") || Equals(InventoryItemData.GetItemType(this.m_selectedRecipe.inventoryItem), gamedataItemType.Gen_CraftingMaterial)
+//     {
+//         quantity = this.m_craftingSystem.GetMaxCraftingAmount(InventoryItemData.GetGameItemData(this.m_selectedItemData));
+//         ZKVLog("CraftingLogicController.OnHoldFinished(): TagsContains() - quantity: " + quantity);
+//         if this.m_selectedRecipe.id.TagsContains(n"Ammo") && quantity == 0
+//         {
+//             return false;
+//         };
+//         if quantity > 1
+//         {
+//             this.OpenQuantityPicker(this.m_selectedItemData, quantity);
+//             return true;
+//         };
+//     };
+//     if this.m_selectedRecipe.id.TagsContains(n"Ammo")
+//     {
+//         ZKVLog("CraftingLogicController.OnHoldFinished(): Ammo");
+//         this.CraftItem(this.m_selectedRecipe, 1);
+//     }
+//     else
+//     {
+//         ZKVLog("CraftingLogicController.OnHoldFinished(): NONAmmo");
+//         this.CraftItem(this.m_selectedRecipe, this.m_selectedRecipe.amount);
+//     };
+// }
 
 
 // @wrapMethod(FullscreenVendorGameController)

@@ -26,7 +26,6 @@ function ZKVLC_Settings.SetupNativeSettingsUIWidgets()
 
     local modPathPrefix = "zkvlc_"
     local subcategories = {
-        "general",
         "capacity_limits",
         "capacity_limits_grenades",
         "capacity_limits_healing",
@@ -37,6 +36,7 @@ function ZKVLC_Settings.SetupNativeSettingsUIWidgets()
         "upgrading_equipment",
         "upgrading_caps",
         "upgrading_caps_iconic",
+        "general",
     }
 
     for _, key in pairs(subcategories) do
@@ -52,20 +52,6 @@ function ZKVLC_Settings.SetupNativeSettingsUIWidgets()
     --     ZKVLC.profilesKeys
     -- )
     -- utils.Config.StoreWidget("ActiveProfile", switcher)
-
-    local copyButton = utils.NativeSettings.nativeSettings.addButton(
-        ZKVLC.nativeSettingsBasePath .. "/" .. modPathPrefix .. "general",
-        "Use settings from Kvalyr Profile",
-        "Click this button to copy all settings from the Kvalyr balance profile. WARNING: Any other changes you've made to settings will be lost.",
-        "Kvalyr Profile",
-        35,
-        function()
-            utils.Settings.SwitchProfileByKey("Kvalyr")
-            utils.Settings.CopyToUserProfile()
-            utils.Settings.SwitchProfileByKey("User")
-            utils.NativeSettings.nativeSettings.refresh()
-        end
-    )
 
     -- Capacity Limits
 
@@ -117,10 +103,7 @@ function ZKVLC_Settings.SetupNativeSettingsUIWidgets()
     )
 
     -- Ammo
-    utils.Config.AddCallback(
-        "Callback_CapacityLimiter_Ammo_Handgun",
-        function(newValue) utils.TweakDB.SetQuantityFlat("Ammo.HandgunAmmo_inline0.value", newValue) end
-    )
+
     utils.Settings.AddSetting(
         modPathPrefix .. "capacity_limits_ammo",
         modPathPrefix .. "settings.Capacity.Limit_Ammo_Handgun",
@@ -130,10 +113,6 @@ function ZKVLC_Settings.SetupNativeSettingsUIWidgets()
         "Callback_CapacityLimiter_Ammo_Handgun"
     )
 
-    utils.Config.AddCallback(
-        "Callback_CapacityLimiter_Ammo_Rifle",
-        function(newValue) utils.TweakDB.SetQuantityFlat("Ammo.RifleAmmo_inline0.value", newValue) end
-    )
     utils.Settings.AddSetting(
         modPathPrefix .. "capacity_limits_ammo",
         modPathPrefix .. "settings.Capacity.Limit_Ammo_Rifle",
@@ -143,10 +122,6 @@ function ZKVLC_Settings.SetupNativeSettingsUIWidgets()
         "Callback_CapacityLimiter_Ammo_Rifle"
     )
 
-    utils.Config.AddCallback(
-        "Callback_CapacityLimiter_Ammo_Shotgun",
-        function(newValue) utils.TweakDB.SetQuantityFlat("Ammo.ShotgunAmmo_inline0.value", newValue) end
-    )
     utils.Settings.AddSetting(
         modPathPrefix .. "capacity_limits_ammo",
         modPathPrefix .. "settings.Capacity.Limit_Ammo_Shotgun",
@@ -156,10 +131,6 @@ function ZKVLC_Settings.SetupNativeSettingsUIWidgets()
         "Callback_CapacityLimiter_Ammo_Shotgun"
     )
 
-    utils.Config.AddCallback(
-        "Callback_CapacityLimiter_Ammo_Sniper",
-        function(newValue) utils.TweakDB.SetQuantityFlat("Ammo.SniperRifleAmmo_inline0.value", newValue) end
-    )
     utils.Settings.AddSetting(
         modPathPrefix .. "capacity_limits_ammo",
         modPathPrefix .. "settings.Capacity.Limit_Ammo_Sniper",
@@ -283,6 +254,22 @@ function ZKVLC_Settings.SetupNativeSettingsUIWidgets()
             "ZKVLC.Config:Upgrading.Cap:" .. rarity .. "_Iconic"
         )
     end
+
+
+    local copyButton = utils.NativeSettings.nativeSettings.addButton(
+        ZKVLC.nativeSettingsBasePath .. "/" .. modPathPrefix .. "general",
+        "Use settings from Kvalyr Profile",
+        "Click this button to copy all settings from the Kvalyr balance profile. WARNING: Any other changes you've made to settings will be lost.",
+        "Kvalyr Profile",
+        35,
+        function()
+            utils.Settings.SwitchProfileByKey("Kvalyr")
+            utils.Settings.CopyToUserProfile()
+            utils.Settings.SwitchProfileByKey("User")
+            utils.NativeSettings.nativeSettings.refresh()
+        end
+    )
+
 end
 
 -- GetMod("ZKV_Takedowns").Settings:Debug()

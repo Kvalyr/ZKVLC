@@ -1,7 +1,7 @@
 -- ====================================================================================================================
 -- ZKVLC for CP2077 by Kvalyr
 -- ====================================================================================================================
-local version = "0.1.3"
+local version = "0.2.0"
 local modString = "ZKVLC v" .. version
 local ZKVLC = {
     name = "ZKVLC",
@@ -61,6 +61,12 @@ local function SetupCrafting()
     ZKVLC:InitModule("Crafting")
 end
 
+local function SetupLimits()
+    ZKVLC.debug("SetupLimits")
+
+    ZKVLC:InitModule("Limits")
+end
+
 local function onInit()
     if not utils.Init() then
         print("ZKVLC: Failed to initialize mod - Please check for error messages above.")
@@ -78,13 +84,17 @@ local function onInit()
 
     utils.doFile("upgrading/upgrading.lua")
     utils.doFile("crafting/crafting.lua")
+    utils.doFile("limits/limits.lua")
 
     utils.pcall(SetupConfig)
     utils.pcall(SetupLocalization)
     utils.pcall(SetupCrafting)
     utils.pcall(SetupUpgrading)
+    utils.pcall(SetupLimits)
     utils.pcall(SetupSettings)
     utils.Settings.LoadActiveProfile()
+
+    ZKVLC:GetModule("Limits").ApplyLimits_Ammo()
 end
 
 function ZKVLC:New()
